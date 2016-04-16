@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class FlySwatter : MonoBehaviour {
 
+    public float moveSpeed = 2.0f;
     public Animator myAnimator;
     public BoxCollider2D myCollider;
     private bool isAttacking;
@@ -18,7 +20,22 @@ public class FlySwatter : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             Attack();
+
+        if(!isAttacking)
+            UpdatePosition();
 	}
+
+    private void UpdatePosition()
+    {
+        Vector3 mousePosViewport = Input.mousePosition;
+        mousePosViewport.z = -Camera.main.gameObject.transform.position.z;
+        Vector3 worldPos =  Camera.main.ScreenToWorldPoint(mousePosViewport);
+
+        Vector3 direction = worldPos - gameObject.transform.position;
+        direction.Normalize();
+
+        gameObject.transform.position = worldPos;// direction * Time.deltaTime * moveSpeed;
+    }
 
     void Attack()
     {
@@ -32,13 +49,11 @@ public class FlySwatter : MonoBehaviour {
 
     public void AttackEnter()
     {
-        Debug.Log("enabled");
         myCollider.enabled = true;
     }
 
     public void AttackExit()
     {
-        Debug.Log("disabled");
         myCollider.enabled = false;
     }
 
@@ -55,7 +70,6 @@ public class FlySwatter : MonoBehaviour {
 
         if (fly)
         {
-            Debug.Log("hit");
             fly.Die();
         }
     }

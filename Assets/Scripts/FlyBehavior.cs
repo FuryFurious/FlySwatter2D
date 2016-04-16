@@ -17,6 +17,7 @@ public class FlyBehavior : MonoBehaviour {
     private const float BLOOD_MAX_SCALE_Y = 1.3f;
 
     private const float FLY_BLOOD_DECAY_TIME = 5.0f;
+    private const float BLOOD_DECAY_TIME_MIN = 2.0f;
 
     public GameObject[] bloodSplatters;
     public DecayOverTime[] ownBodyParts;
@@ -40,8 +41,8 @@ public class FlyBehavior : MonoBehaviour {
 
     void Start () 
     {
-    
-	}
+        Init(0);
+    }
 
     public void Init(int curRound)
     {
@@ -129,7 +130,9 @@ public class FlyBehavior : MonoBehaviour {
 
     void SpawnBlood()
     {
-        for (int i = 0; i < 5; i++)
+        int num = Random.Range(1, 5);
+
+        for (int i = 0; i < num; i++)
         {
             GameObject newObj = (GameObject)Instantiate(bloodSplatters[Random.Range(0, bloodSplatters.Length)], gameObject.transform.position, Quaternion.Euler(0.0f, 0.0f, Random.Range(0, 360.0f)));
 
@@ -139,7 +142,7 @@ public class FlyBehavior : MonoBehaviour {
             newObj.transform.position += offset;
             newObj.transform.localScale = Vector3.Scale(scale, newObj.transform.localScale);
 
-            newObj.GetComponent<DecayOverTime>().totalLifeTime = FLY_BLOOD_DECAY_TIME;
+            newObj.GetComponent<DecayOverTime>().totalLifeTime = Random.Range(BLOOD_DECAY_TIME_MIN, FLY_BLOOD_DECAY_TIME);
         }
 
 
@@ -147,20 +150,24 @@ public class FlyBehavior : MonoBehaviour {
 
     public void Die()
     {
-        isDead = true;
-        myAnimator.SetBool("IsDead", true);
         SpawnBlood();
 
-        flySound.Pause();
-        soundIsPlaying = false;
-
-        for (int i = 0; i < ownBodyParts.Length; i++)
+        if (!isDead)
         {
-            ownBodyParts[i].totalLifeTime = FLY_BLOOD_DECAY_TIME;
-            ownBodyParts[i].enabled = true;
-        }
+            isDead = true;
+            myAnimator.SetBool("IsDead", true);
 
-        timeToRemove = FLY_BLOOD_DECAY_TIME;
+            flySound.Pause();
+            soundIsPlaying = false;
+
+            for (int i = 0; i < ownBodyParts.Length; i++)
+            {
+                ownBodyParts[i].totalLifeTime = FLY_BLOOD_DECAY_TIME;
+                ownBodyParts[i].enabled = true;
+            }
+
+            timeToRemove = FLY_BLOOD_DECAY_TIME;
+        }
     }
 
     public void Pause(bool val)
