@@ -53,7 +53,7 @@ public class FlyBehavior : MonoBehaviour {
 
         flyStates[(int)curFlyStateIndex].OnStateEnter(this, null);
 
-        WorldManager.Instance.theFly = this;
+        WorldManager.Instance.TheFly = this;
     }
 
 
@@ -122,10 +122,20 @@ public class FlyBehavior : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter2D()
+
+    public void OnSwatterAttackEnter()
     {
-       
-       
+        flyStates[(int)curFlyStateIndex].OnSwatterAttackEnter(this, WorldManager.Instance.TheFlySwatter);
+    }
+
+    public void OnSwatterAttackUpdate()
+    {
+        flyStates[(int)curFlyStateIndex].OnSwatterAttackUpdate(this, WorldManager.Instance.TheFlySwatter);
+    }
+
+    public void OnSwatterAttackExit()
+    {
+        flyStates[(int)curFlyStateIndex].OnSwatterAttackExit(this, WorldManager.Instance.TheFlySwatter);
     }
 
     void SpawnBlood()
@@ -173,6 +183,7 @@ public class FlyBehavior : MonoBehaviour {
     public void Pause(bool val)
     {
         this.isPaused = val;
+
         //pause the game:
         if (val)
         {

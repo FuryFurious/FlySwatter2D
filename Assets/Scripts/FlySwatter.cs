@@ -4,7 +4,6 @@ using System;
 
 public class FlySwatter : MonoBehaviour {
 
-    public float moveSpeed = 2.0f;
     public Animator myAnimator;
     public BoxCollider2D myCollider;
     private bool isAttacking;
@@ -12,7 +11,7 @@ public class FlySwatter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+        WorldManager.Instance.TheFlySwatter = this;
 	}
 	
 	// Update is called once per frame
@@ -23,18 +22,23 @@ public class FlySwatter : MonoBehaviour {
 
         if(!isAttacking)
             UpdatePosition();
+
+        else
+        {
+            if (WorldManager.Instance.TheFly)
+                WorldManager.Instance.TheFly.OnSwatterAttackEnter();
+        }
 	}
 
     private void UpdatePosition()
     {
         Vector3 mousePosViewport = Input.mousePosition;
         mousePosViewport.z = -Camera.main.gameObject.transform.position.z;
-        Vector3 worldPos =  Camera.main.ScreenToWorldPoint(mousePosViewport);
 
-        Vector3 direction = worldPos - gameObject.transform.position;
-        direction.Normalize();
+      //  Vector3 direction = worldPos - gameObject.transform.position;
+     //   direction.Normalize();
 
-        gameObject.transform.position = worldPos;// direction * Time.deltaTime * moveSpeed;
+        gameObject.transform.position = Camera.main.ScreenToWorldPoint(mousePosViewport);
     }
 
     void Attack()
@@ -45,16 +49,26 @@ public class FlySwatter : MonoBehaviour {
             myAnimator.SetBool("IsAttacking", isAttacking);
         }
 
+        else
+        {
+            if (WorldManager.Instance.TheFly)
+                WorldManager.Instance.TheFly.OnSwatterAttackUpdate();
+        }
+
     }
 
     public void AttackEnter()
     {
         myCollider.enabled = true;
+
     }
 
     public void AttackExit()
     {
         myCollider.enabled = false;
+
+        if (WorldManager.Instance.TheFly)
+            WorldManager.Instance.TheFly.OnSwatterAttackExit();
     }
 
     public void OnAttackAnimationEnd()

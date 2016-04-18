@@ -10,6 +10,10 @@ public abstract class AFlyState
         this.difficulty = difficulty;
     }
 
+    public abstract void OnSwatterAttackEnter(FlyBehavior fly, FlySwatter swatter);
+    public abstract void OnSwatterAttackUpdate(FlyBehavior fly, FlySwatter swatter);
+    public abstract void OnSwatterAttackExit(FlyBehavior fly, FlySwatter swatter);
+
     public abstract void OnStateEnter(FlyBehavior fly, AFlyState oldState);
 
     public abstract void OnStateExit(FlyBehavior fly, AFlyState newState);

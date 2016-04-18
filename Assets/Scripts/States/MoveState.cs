@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 public class MoveState : AFlyState
 {
     private float directionChangeAngle = 45.0f;
@@ -13,10 +12,16 @@ public class MoveState : AFlyState
 
     private float timeToChangeDirection;
 
+    private float runAwayRadius;
+    private float runAwaySpeed;
+
+    private bool swatterIsAttacking;
+
     public MoveState(int difficulty) 
         : base(difficulty)
     {
-
+        runAwayRadius = 10.0f;
+        runAwaySpeed = 50.0f;
     }
 
     public override void OnStateEnter(FlyBehavior fly, AFlyState oldState)
@@ -27,7 +32,7 @@ public class MoveState : AFlyState
 
         this.speed = Random.Range(minSpeed, maxSpeed);
 
-        ChangeDirection(fly);
+        //ChangeDirection(fly);
     }
 
     public override void OnStateExit(FlyBehavior fly, AFlyState newState)
@@ -37,27 +42,54 @@ public class MoveState : AFlyState
 
     public override void OnStateUpdate(FlyBehavior fly)
     {
-        timeToChangeDirection -= Time.deltaTime;
+
+        if(!swatterIsAttacking)
+        {
+            timeToChangeDirection -= Time.deltaTime;
+
+            if (timeToChangeDirection <= 0.0f)
+            {
+                ChangeDirection(fly);
+            }
+
+            if (Random.value < 0.01f)
+            {
+                fly.SetState(FlyBehavior.EFlyState.Wait);
+            }
+        }
+
+        else
+        {
+            Vector3 runAwayDirection = fly.gameObject.transform.position - WorldManager.Instance.TheFlySwatter.gameObject.transform.position;
+            runAwayDirection.z = 0.0f;
+
+            float distance = runAwayDirection.magnitude;
+
+            runAwayDirection.Normalize();
+
+            if (distance < runAwayRadius)
+            {
+                fly.gameObject.transform.up = runAwayDirection;
+                speed = runAwaySpeed;
+            }
+
+            else
+            {
+                fly.SetState(FlyBehavior.EFlyState.Wait);
+            }
+
+        
+        }
+
 
         fly.gameObject.transform.position += fly.gameObject.transform.up * speed * Time.deltaTime;
-
-        if (timeToChangeDirection <= 0.0f)
-        {
-            ChangeDirection(fly);
-        }
-
-        if (Random.value < 0.01f)
-        {
-            fly.SetState(FlyBehavior.EFlyState.Wait);
-        }
-
     }
 
     private void ChangeDirection(FlyBehavior fly)
     {
         timeToChangeDirection = Random.Range(0.25f, 0.5f);
 
-        Quaternion rotation = Quaternion.Euler(0.0f, 0.0f, directionChangeAngle * (2.0f * Random.value - 1.0f));
+        Quaternion rotation = Quaternion.Euler(0.0f, 0.0f, directionChangeAngle * (2.0f * UnityEngine.Random.value - 1.0f));
 
         Vector3 toOrigin = fly.gameObject.transform.position;
         toOrigin.z = 0.0f;
@@ -71,5 +103,20 @@ public class MoveState : AFlyState
 
 
         fly.gameObject.transform.up = Vector3.Lerp(rotation * fly.gameObject.transform.up, -toOrigin, t);
+    }
+
+    public override void OnSwatterAttackEnter(FlyBehavior fly, FlySwatter swatter)
+    {
+        swatterIsAttacking = true;
+    }
+
+    public override void OnSwatterAttackUpdate(FlyBehavior fly, FlySwatter swatter)
+    {
+
+    }
+
+    public override void OnSwatterAttackExit(FlyBehavior fly, FlySwatter swatter)
+    {
+        swatterIsAttacking = false;
     }
 }
