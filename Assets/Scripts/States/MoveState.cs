@@ -32,7 +32,7 @@ public class MoveState : AFlyState
 
         this.speed = Random.Range(minSpeed, maxSpeed);
 
-        //ChangeDirection(fly);
+        ChangeDirection(fly);
     }
 
     public override void OnStateExit(FlyBehavior fly, AFlyState newState)
@@ -60,6 +60,7 @@ public class MoveState : AFlyState
 
         else
         {
+            Debug.Log("run awway");
             Vector3 runAwayDirection = fly.gameObject.transform.position - WorldManager.Instance.TheFlySwatter.gameObject.transform.position;
             runAwayDirection.z = 0.0f;
 
@@ -101,6 +102,8 @@ public class MoveState : AFlyState
 
         float t = distToOrigin / maxDistance;
 
+      //  this.speed = Random.RandomRange(minSpeed, maxSpeed);
+
 
         fly.gameObject.transform.up = Vector3.Lerp(rotation * fly.gameObject.transform.up, -toOrigin, t);
     }
@@ -108,15 +111,18 @@ public class MoveState : AFlyState
     public override void OnSwatterAttackEnter(FlyBehavior fly, FlySwatter swatter)
     {
         swatterIsAttacking = true;
+        Debug.Log("start");
     }
 
     public override void OnSwatterAttackUpdate(FlyBehavior fly, FlySwatter swatter)
     {
-
+        Debug.Log("update");
     }
 
     public override void OnSwatterAttackExit(FlyBehavior fly, FlySwatter swatter)
     {
         swatterIsAttacking = false;
+
+        Debug.Log("exit");
     }
 }

@@ -26,15 +26,17 @@ public class WaitState : AFlyState
     {
         float rand = Random.value;
 
-        if (rand < 0.01f)
+        if (rand < 0.015f)
+        {
+            fly.TriggerIdle();
+        }
+
+        else if (rand < 0.1f)
         {
             fly.SetState(FlyBehavior.EFlyState.Move);
         }
 
-        else if (rand < 0.025f)
-        {
-            fly.TriggerIdle();
-        }
+      
     }
 
     public override void OnSwatterAttackEnter(FlyBehavior fly, FlySwatter swatter)

@@ -21,6 +21,7 @@ public class WorldManager : MonoBehaviour {
     private RoundInfo[] rounds;
 
     private int curRound = -1;
+    private float currentRoundTime;
     private float remainingRoundTime;
     private bool roundIsRunning = false;
     private bool showEndScreen = false;
@@ -59,8 +60,10 @@ public class WorldManager : MonoBehaviour {
 
     private void SetRoundTimerText()
     {
-        int minutes = Mathf.RoundToInt(this.remainingRoundTime / 60.0f);
-        int seconds = Mathf.RoundToInt(this.remainingRoundTime - minutes);
+        int minutes = Mathf.RoundToInt(this.currentRoundTime / 60.0f);
+        int seconds = Mathf.RoundToInt(this.currentRoundTime - minutes);
+
+
         roundTimerText.text = string.Concat((minutes < 10 ? ("0" + minutes) : ""+minutes), ":", (seconds < 10 ? ("0" + seconds) : ""+seconds));
     }
 
@@ -74,6 +77,9 @@ public class WorldManager : MonoBehaviour {
             if (roundIsRunning)
             {
                 this.remainingRoundTime -= Time.deltaTime;
+                currentRoundTime += Time.deltaTime;
+
+
                 SetRoundTimerText();
                 if (remainingRoundTime <= 0.0f)
                 {
@@ -103,6 +109,7 @@ public class WorldManager : MonoBehaviour {
     {
         CreateAFly();
 
+        currentRoundTime = 0.0f;
         Time.timeScale = 1.0f;
         
 

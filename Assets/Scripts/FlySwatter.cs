@@ -25,7 +25,7 @@ public class FlySwatter : MonoBehaviour {
 
         else
         {
-            if (WorldManager.Instance.TheFly)
+           if (WorldManager.Instance.TheFly)
                 WorldManager.Instance.TheFly.OnSwatterAttackEnter();
         }
 	}
@@ -65,10 +65,14 @@ public class FlySwatter : MonoBehaviour {
 
     public void AttackExit()
     {
+     
         myCollider.enabled = false;
 
         if (WorldManager.Instance.TheFly)
-            WorldManager.Instance.TheFly.OnSwatterAttackExit();
+        {
+            Debug.Log("fly exists");
+           WorldManager.Instance.TheFly.OnSwatterAttackExit();
+        }
     }
 
     public void OnAttackAnimationEnd()

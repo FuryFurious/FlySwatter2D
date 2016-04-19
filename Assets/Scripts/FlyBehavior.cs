@@ -135,7 +135,9 @@ public class FlyBehavior : MonoBehaviour {
 
     public void OnSwatterAttackExit()
     {
-        flyStates[(int)curFlyStateIndex].OnSwatterAttackExit(this, WorldManager.Instance.TheFlySwatter);
+        flyStates[(int)EFlyState.Move].OnSwatterAttackExit(this, WorldManager.Instance.TheFlySwatter);
+        flyStates[(int)EFlyState.Wait].OnSwatterAttackExit(this, WorldManager.Instance.TheFlySwatter);
+
     }
 
     void SpawnBlood()
