@@ -3,126 +3,165 @@ using System.Collections;
 
 public class MoveState : AFlyState
 {
+    /// <summary>The degree the fly can change its direction.</summary>
     private float directionChangeAngle = 45.0f;
 
-    private float minSpeed;
-    private float maxSpeed;
+    private float minSpeed = 30.0f;
+    private float maxSpeed = 45.0f;
 
+    private float timeToNewActionMin = 0.25f;
+    private float timeToNewActionMax = 0.5f;
+    private float timeToNewAction;
+
+    /// <summary>The distance in which the fly flees from the swatter when it attacks.</summary>
+    private float runAwayRadius = 15.0f;
+    /// <summary>The speed the fly is using when the swatter is attacking and its in the radius.</summary>
+    private float runAwaySpeed = 55.0f;
+    /// <summary>The chance in percent that the fly will wait when its making its next decision.</summary>
+    private float chanceToWait = 0.33f;
+    private float runAwayChance = 1.0f;
+
+    /// <summary>True if the swatter ist attacking, until it hit the surface.</summary>
+    private bool swatterIsAttacking = false;
+
+    /// <summary>The current speed the fly is flying around.</summary>
     private float speed;
 
-    private float timeToChangeDirection;
+    private float maxDistanceToNormalize = 48.0f;
 
-    private float runAwayRadius;
-    private float runAwaySpeed;
+  //  Vector3 toSwatterDirection;
+   // float distanceToSwatter;
 
-    private bool swatterIsAttacking;
-
-    public MoveState(int difficulty) 
-        : base(difficulty)
+    public MoveState(int difficulty, FlySwatter swatter, FlyBehavior fly) 
+        : base(difficulty, swatter, fly)
     {
-        runAwayRadius = 10.0f;
-        runAwaySpeed = 50.0f;
+        switch (difficulty)
+        {
+            case 0:
+                minSpeed = 10.0f;
+                maxSpeed = 20.0f;
+                runAwayChance = 0.33f;
+                runAwaySpeed = 40.0f;              
+                break;
+
+            case 1:
+                minSpeed = 15.0f;
+                maxSpeed = 20.0f;
+                runAwayChance = 0.66f;
+                runAwaySpeed = 45.0f;
+                break;
+
+            case 2:
+                minSpeed = 20.0f;
+                maxSpeed = 25.0f;
+                runAwayChance = 0.85f;
+                runAwaySpeed = 50.0f;
+                break;
+
+            case 3:
+                minSpeed = 25.0f;
+                maxSpeed = 30.0f;
+                runAwayChance = 1.0f;
+                runAwaySpeed = 55.0f;
+                break;
+
+            default:
+                break;
+        }
     }
 
-    public override void OnStateEnter(FlyBehavior fly, AFlyState oldState)
+    public override void OnStateEnter( AFlyState oldState)
     {
         fly.IsMoving = true;
-        this.minSpeed = 10.0f;
-        this.maxSpeed = 15.0f;
+        //ChangeNormalDirection();
+    }
 
+    public override void OnStateExit(AFlyState newState)
+    {
+       // this.speed = Random.Range(minSpeed, maxSpeed);
+    }
+
+    public override void OnStateUpdate()
+    {
+        Vector3 toSwatterDirection = fly.gameObject.transform.position - WorldManager.Instance.TheFlySwatter.gameObject.transform.position;
+        toSwatterDirection.z = 0.0f;
+
+        float distanceToSwatter = toSwatterDirection.magnitude;
+
+        //update if the swatter is not attackig, or if the swatter is attacking but far away:
+        if(!swatterIsAttacking ||  (swatterIsAttacking && distanceToSwatter >= runAwayRadius))
+        {
+            timeToNewAction -= Time.deltaTime;
+
+            if (timeToNewAction <= 0.0f)
+            {
+                ChangeNormalDirection();
+
+                if (Random.value < chanceToWait)
+                {
+                    fly.SetState(FlyBehavior.EFlyState.Wait);
+                }
+            }
+        }
+
+
+
+    }
+
+    private void ChangeNormalDirection()
+    {
+        timeToNewAction = Random.Range(timeToNewActionMin, timeToNewActionMax);
+
+        ApplyNormalMovementSpeed();
+
+        fly.gameObject.transform.up = GetNewDirectionVector();
+    }
+
+    private void ApplyNormalMovementSpeed()
+    {
         this.speed = Random.Range(minSpeed, maxSpeed);
-
-        ChangeDirection(fly);
     }
 
-    public override void OnStateExit(FlyBehavior fly, AFlyState newState)
+    private Vector3 GetNewDirectionVector()
     {
-
-    }
-
-    public override void OnStateUpdate(FlyBehavior fly)
-    {
-
-        if(!swatterIsAttacking)
-        {
-            timeToChangeDirection -= Time.deltaTime;
-
-            if (timeToChangeDirection <= 0.0f)
-            {
-                ChangeDirection(fly);
-            }
-
-            if (Random.value < 0.01f)
-            {
-                fly.SetState(FlyBehavior.EFlyState.Wait);
-            }
-        }
-
-        else
-        {
-            Debug.Log("run awway");
-            Vector3 runAwayDirection = fly.gameObject.transform.position - WorldManager.Instance.TheFlySwatter.gameObject.transform.position;
-            runAwayDirection.z = 0.0f;
-
-            float distance = runAwayDirection.magnitude;
-
-            runAwayDirection.Normalize();
-
-            if (distance < runAwayRadius)
-            {
-                fly.gameObject.transform.up = runAwayDirection;
-                speed = runAwaySpeed;
-            }
-
-            else
-            {
-                fly.SetState(FlyBehavior.EFlyState.Wait);
-            }
-
-        
-        }
-
-
-        fly.gameObject.transform.position += fly.gameObject.transform.up * speed * Time.deltaTime;
-    }
-
-    private void ChangeDirection(FlyBehavior fly)
-    {
-        timeToChangeDirection = Random.Range(0.25f, 0.5f);
-
         Quaternion rotation = Quaternion.Euler(0.0f, 0.0f, directionChangeAngle * (2.0f * UnityEngine.Random.value - 1.0f));
+        Vector3 randomDirection = rotation * fly.transform.up;
 
         Vector3 toOrigin = fly.gameObject.transform.position;
         toOrigin.z = 0.0f;
-
         float distToOrigin = toOrigin.magnitude;
-        toOrigin.Normalize();
-        
-        float maxDistance = 32.0f;
 
-        float t = distToOrigin / maxDistance;
+        float t = distToOrigin / maxDistanceToNormalize;
 
-      //  this.speed = Random.RandomRange(minSpeed, maxSpeed);
-
-
-        fly.gameObject.transform.up = Vector3.Lerp(rotation * fly.gameObject.transform.up, -toOrigin, t);
+        return Vector3.Lerp(randomDirection, -toOrigin, t);
     }
 
-    public override void OnSwatterAttackEnter(FlyBehavior fly, FlySwatter swatter)
+    public override void OnSwatterAttackStarted(bool isActiveState)
     {
+
+        Vector3 toSwatterDirection = fly.gameObject.transform.position - WorldManager.Instance.TheFlySwatter.gameObject.transform.position;
+        toSwatterDirection.z = 0.0f;
+
+        float distanceToSwatter = toSwatterDirection.magnitude;
         swatterIsAttacking = true;
-        Debug.Log("start");
+
+        if (distanceToSwatter < runAwayRadius && Random.value <= runAwayChance)
+        {
+            fly.gameObject.transform.up = toSwatterDirection;
+            speed = runAwaySpeed;
+        }
+
     }
 
-    public override void OnSwatterAttackUpdate(FlyBehavior fly, FlySwatter swatter)
-    {
-        Debug.Log("update");
-    }
-
-    public override void OnSwatterAttackExit(FlyBehavior fly, FlySwatter swatter)
+    public override void OnSwatterAttackEnded(bool isActiveState)
     {
         swatterIsAttacking = false;
 
-        Debug.Log("exit");
+        ChangeNormalDirection();
+    }
+
+    public override void OnStateFixedUpdate()
+    {
+        fly.gameObject.transform.position += fly.gameObject.transform.up * speed * Time.deltaTime;
     }
 }

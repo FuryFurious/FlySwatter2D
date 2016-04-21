@@ -1,0 +1,3 @@
+- result datei falsch benannt -> results.txt0
+- zu viel treffer -> zählen tote als treffer?! oder mehrfach treffer bei schlag?
+- "Drücke Enter text" im startscreen 

@@ -6,54 +6,94 @@ public class WaitState : AFlyState
 
     private float flySwatterAggroRadius;
 
-    public WaitState(int difficulty)
-        : base(difficulty)
+    private float timeToNewAction;
+
+    private float minTimeToNewAction = 0.5f;
+    private float maxTimeToNewAction = 1.0f;
+
+    private float chanceToFleeOnAttack = 0.75f;
+
+    public WaitState(int difficulty, FlySwatter swatter, FlyBehavior fly)
+        : base(difficulty, swatter, fly)
     {
         flySwatterAggroRadius = 12.0f;
+
+        switch (difficulty)
+        {
+            case 0:
+                chanceToFleeOnAttack = 0.15f;
+                break;
+
+            case 1:
+                chanceToFleeOnAttack = 0.5f;
+                break;
+
+            case 2:
+                chanceToFleeOnAttack = 0.75f;
+                break;
+
+            case 3:
+                chanceToFleeOnAttack = 0.95f;
+                break;
+
+            default:
+                break;
+        }
     }
 
-    public override void OnStateEnter(FlyBehavior fly, AFlyState oldState)
+    public override void OnStateEnter(AFlyState oldState)
     {
         fly.IsMoving = false;
     }
 
-    public override void OnStateExit(FlyBehavior fly, AFlyState newState)
+    public override void OnStateExit(AFlyState newState)
     {
 
     }
 
-    public override void OnStateUpdate(FlyBehavior fly)
+    public override void OnStateUpdate()
     {
-        float rand = Random.value;
 
-        if (rand < 0.015f)
+        timeToNewAction -= Time.deltaTime;
+
+        if (timeToNewAction <= 0.0f)
         {
-            fly.TriggerIdle();
-        }
+            timeToNewAction = Random.Range(minTimeToNewAction, maxTimeToNewAction);
 
-        else if (rand < 0.1f)
+            float rand = Random.value;
+
+            if (rand < 0.75f)
+            {
+                fly.TriggerIdle();
+            }
+
+            else
+            {
+                fly.SetState(FlyBehavior.EFlyState.Move);
+            }
+        }
+    }
+
+    public override void OnSwatterAttackStarted(bool isActiveState)
+    {
+        if (isActiveState)
         {
-            fly.SetState(FlyBehavior.EFlyState.Move);
-        }
+            if ((swatter.gameObject.transform.position - fly.gameObject.transform.position).sqrMagnitude < flySwatterAggroRadius * flySwatterAggroRadius)
+            {
 
+                if (Random.value <= chanceToFleeOnAttack)
+                    fly.SetState(FlyBehavior.EFlyState.Move);
+            }
+        }
+    }
+
+    public override void OnSwatterAttackEnded(bool isActiveState)
+    {
+
+    }
+
+    public override void OnStateFixedUpdate()
+    {
       
-    }
-
-    public override void OnSwatterAttackEnter(FlyBehavior fly, FlySwatter swatter)
-    {
-        if (Vector3.Distance(swatter.gameObject.transform.position, fly.gameObject.transform.position) < flySwatterAggroRadius)
-        {
-            fly.SetState(FlyBehavior.EFlyState.Move);
-        }
-    }
-
-    public override void OnSwatterAttackExit(FlyBehavior fly, FlySwatter swatter)
-    {
-
-    }
-
-    public override void OnSwatterAttackUpdate(FlyBehavior fly, FlySwatter swatter)
-    {
-
     }
 }

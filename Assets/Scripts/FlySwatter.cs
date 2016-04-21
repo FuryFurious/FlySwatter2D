@@ -6,12 +6,17 @@ public class FlySwatter : MonoBehaviour {
 
     public Animator myAnimator;
     public BoxCollider2D myCollider;
+    public GameObject bottomObject;
     private bool isAttacking;
 
+    private bool hitFly = false;
+    private bool firstHit = false;
+
+    public AudioSource whipSound;
 
 	// Use this for initialization
 	void Start () {
-        WorldManager.Instance.TheFlySwatter = this;
+        //WorldManager.Instance.TheFlySwatter = this;
 	}
 	
 	// Update is called once per frame
@@ -22,21 +27,12 @@ public class FlySwatter : MonoBehaviour {
 
         if(!isAttacking)
             UpdatePosition();
-
-        else
-        {
-           if (WorldManager.Instance.TheFly)
-                WorldManager.Instance.TheFly.OnSwatterAttackEnter();
-        }
 	}
 
     private void UpdatePosition()
     {
         Vector3 mousePosViewport = Input.mousePosition;
         mousePosViewport.z = -Camera.main.gameObject.transform.position.z;
-
-      //  Vector3 direction = worldPos - gameObject.transform.position;
-     //   direction.Normalize();
 
         gameObject.transform.position = Camera.main.ScreenToWorldPoint(mousePosViewport);
     }
@@ -47,32 +43,38 @@ public class FlySwatter : MonoBehaviour {
         {
             isAttacking = true;
             myAnimator.SetBool("IsAttacking", isAttacking);
-        }
 
-        else
-        {
             if (WorldManager.Instance.TheFly)
-                WorldManager.Instance.TheFly.OnSwatterAttackUpdate();
-        }
+                WorldManager.Instance.TheFly.OnSwatterAttackStarted();
 
+            whipSound.Play();
+        }
     }
 
     public void AttackEnter()
     {
         myCollider.enabled = true;
 
+     
     }
 
     public void AttackExit()
     {
-     
         myCollider.enabled = false;
 
         if (WorldManager.Instance.TheFly)
         {
-            Debug.Log("fly exists");
-           WorldManager.Instance.TheFly.OnSwatterAttackExit();
+            WorldManager.Instance.TheFly.OnSwatterAttackEnded();
         }
+
+        if (hitFly)
+            WorldManager.Instance.OnHit(firstHit);
+
+        else
+            WorldManager.Instance.OnMissed();
+
+        hitFly = false;
+        firstHit = false;
     }
 
     public void OnAttackAnimationEnd()
@@ -88,8 +90,21 @@ public class FlySwatter : MonoBehaviour {
 
         if (fly)
         {
-            fly.Die();
+            hitFly = true;
+            firstHit = fly.Die();
+
+            //Physics2D.IgnoreCollision(myCollider, other);
         }
+    }
+
+    public void Hide()
+    {
+        bottomObject.SetActive(false);
+    }
+
+    public void Unhide()
+    {
+        bottomObject.SetActive(true);
     }
     
 }

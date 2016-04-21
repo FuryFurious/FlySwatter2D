@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.IO;
 
 public class WorldManager : MonoBehaviour {
 
@@ -28,13 +29,19 @@ public class WorldManager : MonoBehaviour {
 
     [HideInInspector]
     public FlyBehavior TheFly;
-    [HideInInspector]
     public FlySwatter TheFlySwatter;
+
+    public AudioSource disappointedCrowdSound;
+    public AudioSource happyKidsSound;
+
+    private int hitCount = 0;
+    private int missCount = 0;
+    private int hitDeadCount = 0;
 
     void Awake()
     {
         Instance = this;
-        EndRound();
+     
 
         /*
 
@@ -55,14 +62,15 @@ public class WorldManager : MonoBehaviour {
     void Start()
     {
         //  Cursor.visible = false;
+        EndRound();
     }
 
 
     private void SetRoundTimerText()
     {
-        int minutes = Mathf.RoundToInt(this.currentRoundTime / 60.0f);
-        int seconds = Mathf.RoundToInt(this.currentRoundTime - minutes);
-
+        int seconds = Mathf.RoundToInt(this.currentRoundTime);
+        int minutes = seconds / 60;
+        seconds = seconds % 60;
 
         roundTimerText.text = string.Concat((minutes < 10 ? ("0" + minutes) : ""+minutes), ":", (seconds < 10 ? ("0" + seconds) : ""+seconds));
     }
@@ -98,15 +106,34 @@ public class WorldManager : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                WriteResults();
                 Application.Quit();
             }
         }
        
     }
 
+    private void WriteResults()
+    {
+        string[] contents = { "Treffer: " + hitCount, "Nicht-Treffer: " + missCount };
+
+        int count = 0;
+        string name = "result0.txt";
+        do
+        {
+            name = string.Concat("result.txt", count);
+            count++;
+        } while (File.Exists(name));
+
+
+        File.WriteAllLines(name, contents);
+    }
 
     public void StartRound()
     {
+        roundTimerText.gameObject.SetActive(true);
+        TheFlySwatter.Unhide();
+
         CreateAFly();
 
         currentRoundTime = 0.0f;
@@ -121,12 +148,30 @@ public class WorldManager : MonoBehaviour {
 
     public void CreateAFly()
     {
-        GameObject newFly = (GameObject)Instantiate(this.FlyPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        Vector3 startPos;
+        int tryCount = 0;
+        do
+        {
+            float randX = Random.Range(min.transform.position.x, max.transform.position.x);
+            float randY = Random.Range(min.transform.position.y, max.transform.position.y);
+
+            startPos = new Vector3(randX, randY, 0.0f);
+            tryCount++;
+
+        }
+        while (Vector3.Distance(startPos, TheFlySwatter.gameObject.transform.position) < 16.0f && tryCount < 10);
+
+  
+
+        GameObject newFly = (GameObject)Instantiate(this.FlyPrefab, startPos, Quaternion.identity);
         newFly.GetComponent<FlyBehavior>().Init(curRound);
     }
 
     private void EndRound()
     {
+        roundTimerText.gameObject.SetActive(false);
+        TheFlySwatter.Hide();
+
         if (this.TheFly)
         {
             Destroy(this.TheFly.gameObject);
@@ -145,13 +190,34 @@ public class WorldManager : MonoBehaviour {
 
         string tmpText = rounds[this.curRound].text.Replace("NEW", "\n");
         roundText.text = tmpText;
+        continueText.text = rounds[this.curRound].continueText.Replace("NEW", "\n");
         this.remainingRoundTime = rounds[this.curRound].roundTime;
 
         SetRoundTimerText();
 
     }
 
+    public void OnMissed()
+    {
+        disappointedCrowdSound.Play();
 
+
+        missCount++;
+    }
+
+    public void OnHit(bool firstHit)
+    {
+        if (firstHit)
+        {          
+            happyKidsSound.Play();
+            hitCount++;
+        }
+
+        else
+        {
+            hitDeadCount++;
+        }
+    }
 
 
     

@@ -16,7 +16,7 @@ public class FlyBehavior : MonoBehaviour {
     private const float BLOOD_MIN_SCALE_Y = 1.3f;
     private const float BLOOD_MAX_SCALE_Y = 1.3f;
 
-    private const float FLY_BLOOD_DECAY_TIME = 5.0f;
+    private const float FLY_BLOOD_DECAY_TIME = 1.0f;
     private const float BLOOD_DECAY_TIME_MIN = 2.0f;
 
     public GameObject[] bloodSplatters;
@@ -24,7 +24,7 @@ public class FlyBehavior : MonoBehaviour {
     public Animator myAnimator;
     public AudioSource flySound;
 
-    private bool isMoving;
+    public bool isMoving;
     public bool IsMoving { get { return isMoving; } set { SetIsMoving(value); } }
 
     private AFlyState[] flyStates;
@@ -32,26 +32,26 @@ public class FlyBehavior : MonoBehaviour {
     [SerializeField]
     private EFlyState curFlyStateIndex = EFlyState.Wait;
 
-    private bool isPaused = false;
-    private bool isDead = false;
-    private bool soundIsPlaying = true;
+    public bool isPaused = false;
+    public bool isDead = false;
+    public bool soundIsPlaying = true;
 
     private float lifeTime = 0.0f;
     private float timeToRemove;
 
     void Start () 
     {
-        Init(0);
+
     }
 
     public void Init(int curRound)
     {
         flyStates = new AFlyState[(int)EFlyState.Count];
         
-        flyStates[(int)EFlyState.Wait] = new WaitState(curRound);
-        flyStates[(int)EFlyState.Move] = new MoveState(curRound);
+        flyStates[(int)EFlyState.Wait] = new WaitState(curRound, WorldManager.Instance.TheFlySwatter, this);
+        flyStates[(int)EFlyState.Move] = new MoveState(curRound, WorldManager.Instance.TheFlySwatter, this);
 
-        flyStates[(int)curFlyStateIndex].OnStateEnter(this, null);
+        flyStates[(int)curFlyStateIndex].OnStateEnter(null);
 
         WorldManager.Instance.TheFly = this;
     }
@@ -65,7 +65,7 @@ public class FlyBehavior : MonoBehaviour {
 
             if (!isDead)
             {
-                flyStates[(int)curFlyStateIndex].OnStateUpdate(this);
+                flyStates[(int)curFlyStateIndex].OnStateUpdate();
                 lifeTime += Time.deltaTime;
             }
 
@@ -86,14 +86,20 @@ public class FlyBehavior : MonoBehaviour {
         }
     }
 
+    void FixedUpdate()
+    {
+        if(!isDead)
+            flyStates[(int)curFlyStateIndex].OnStateFixedUpdate();
+    }
+
 
     public void SetState(EFlyState newStateIndex)
     {
         AFlyState oldState = flyStates[(int)curFlyStateIndex];
         AFlyState newState = flyStates[(int)newStateIndex];
 
-        oldState.OnStateExit(this, newState);
-        newState.OnStateEnter(this, oldState);
+        oldState.OnStateExit(newState);
+        newState.OnStateEnter(oldState);
 
         this.curFlyStateIndex = newStateIndex;
     }
@@ -123,20 +129,20 @@ public class FlyBehavior : MonoBehaviour {
     }
 
 
-    public void OnSwatterAttackEnter()
+    public void OnSwatterAttackStarted()
     {
-        flyStates[(int)curFlyStateIndex].OnSwatterAttackEnter(this, WorldManager.Instance.TheFlySwatter);
+        for (int i = 0; i < flyStates.Length; i++)
+        {
+            flyStates[i].OnSwatterAttackStarted(i == (int)curFlyStateIndex);
+        }
     }
 
-    public void OnSwatterAttackUpdate()
+    public void OnSwatterAttackEnded()
     {
-        flyStates[(int)curFlyStateIndex].OnSwatterAttackUpdate(this, WorldManager.Instance.TheFlySwatter);
-    }
-
-    public void OnSwatterAttackExit()
-    {
-        flyStates[(int)EFlyState.Move].OnSwatterAttackExit(this, WorldManager.Instance.TheFlySwatter);
-        flyStates[(int)EFlyState.Wait].OnSwatterAttackExit(this, WorldManager.Instance.TheFlySwatter);
+        for (int i = 0; i < flyStates.Length; i++)
+        {
+            flyStates[i].OnSwatterAttackEnded(i == (int)curFlyStateIndex);
+        }
 
     }
 
@@ -154,13 +160,13 @@ public class FlyBehavior : MonoBehaviour {
             newObj.transform.position += offset;
             newObj.transform.localScale = Vector3.Scale(scale, newObj.transform.localScale);
 
-            newObj.GetComponent<DecayOverTime>().totalLifeTime = Random.Range(BLOOD_DECAY_TIME_MIN, FLY_BLOOD_DECAY_TIME);
+            newObj.GetComponent<DecayOverTime>().totalLifeTime = (BLOOD_DECAY_TIME_MIN);
         }
 
 
     }
 
-    public void Die()
+    public bool Die()
     {
         SpawnBlood();
 
@@ -178,8 +184,14 @@ public class FlyBehavior : MonoBehaviour {
                 ownBodyParts[i].enabled = true;
             }
 
+            WorldManager.Instance.CreateAFly();
+
             timeToRemove = FLY_BLOOD_DECAY_TIME;
+
+            return true;
         }
+
+        return false;
     }
 
     public void Pause(bool val)

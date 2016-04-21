@@ -7,11 +7,13 @@ public class RoundInfo
 {
     public float roundTime;
     public string text;
+    public string continueText;
 
-    public RoundInfo(float time, string text)
+    public RoundInfo(float time, string text, string continueText)
     {
         this.roundTime = time;
         this.text = text;
+        this.continueText = continueText;
     }
 	
 }
