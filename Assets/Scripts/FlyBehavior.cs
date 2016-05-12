@@ -39,9 +39,24 @@ public class FlyBehavior : MonoBehaviour {
     private float lifeTime = 0.0f;
     private float timeToRemove;
 
+    [SerializeField]
+    private float startVolume = 0.25f;
+    [SerializeField]
+    private float maxVolume = 0.75f;
+
     void Start () 
     {
 
+    }
+
+    public void IncreaseSoundVolume(float delta)
+    {
+        flySound.volume = Mathf.Min(flySound.volume + delta, maxVolume);
+    }
+
+    public void ResetSoundVolume()
+    {
+        flySound.volume = startVolume;
     }
 
     public void Init(int curRound)
@@ -54,15 +69,15 @@ public class FlyBehavior : MonoBehaviour {
         flyStates[(int)curFlyStateIndex].OnStateEnter(null);
 
         WorldManager.Instance.TheFly = this;
+
+        flySound.volume = startVolume;
     }
 
 
     void Update()
     {
-
         if (!isPaused)
         {
-
             if (!isDead)
             {
                 flyStates[(int)curFlyStateIndex].OnStateUpdate();
@@ -76,13 +91,6 @@ public class FlyBehavior : MonoBehaviour {
                 if (timeToRemove < 0.0f)
                     Destroy(gameObject);
             }
-
-
-        }
-        //TODO: remove:
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Die();
         }
     }
 

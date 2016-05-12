@@ -46,23 +46,24 @@ public class MoveState : AFlyState
 
             case 1:
                 minSpeed = 15.0f;
-                maxSpeed = 20.0f;
-                runAwayChance = 0.66f;
-                runAwaySpeed = 45.0f;
+                maxSpeed = 25.0f;
+                runAwayChance = 0.75f;
+                runAwaySpeed = 50.0f;
                 break;
 
             case 2:
-                minSpeed = 20.0f;
-                maxSpeed = 25.0f;
-                runAwayChance = 0.85f;
-                runAwaySpeed = 50.0f;
+                minSpeed = 10.0f;
+                maxSpeed = 20.0f;
+                runAwayChance = 0.33f;
+                runAwaySpeed = 40.0f;   
                 break;
 
             case 3:
                 minSpeed = 25.0f;
                 maxSpeed = 30.0f;
                 runAwayChance = 1.0f;
-                runAwaySpeed = 55.0f;
+                runAwaySpeed = 60.0f;
+                runAwayRadius = 20.0f;
                 break;
 
             default:

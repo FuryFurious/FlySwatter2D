@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.IO;
+using System.Collections.Generic;
+using System.Xml.Linq;
+using System;
 
 public class WorldManager : MonoBehaviour {
 
@@ -15,17 +18,22 @@ public class WorldManager : MonoBehaviour {
     public Text continueText;
     public Text roundTimerText;
 
+    /// <summary>Minimum transform of the level (minimum boundary in which the fly should fly)</summary>
     public Transform min;
     public Transform max;
 
     [SerializeField]
     private RoundInfo[] rounds;
 
+    /// <summary>Indicates in which round the swatter started to attack. </summary>
+    private int roundIdWhenSwatterAttackStarted = -1;
     private int curRound = -1;
     private float currentRoundTime;
     private float remainingRoundTime;
     private bool roundIsRunning = false;
     private bool showEndScreen = false;
+
+    public bool RoundIsRunning { get { return roundIsRunning; } }
 
     [HideInInspector]
     public FlyBehavior TheFly;
@@ -38,31 +46,57 @@ public class WorldManager : MonoBehaviour {
     private int missCount = 0;
     private int hitDeadCount = 0;
 
+    private int[] roundHits;
+    private int[] roundMisses;
+
+    [SerializeField]
+    private float timeSinceLastClick;
+    [SerializeField]
+    private int timeWhenSoundIncrease = 15;
+    private int lastSoundIncreaseTime = -1;
+
+    [SerializeField]
+    private float volumeIncreaseOnMiss = 0.05f;
+    [SerializeField]
+    private float volumeIncreaseAfterTime = 0.1f;
+
     void Awake()
     {
         Instance = this;
-     
 
-        /*
+        SemainePreAdapter.Init();
 
-        <b>Herzlich Willkommen bei �Klatsch die Fliege�!</b>NEWDie Aufgabe des Spiels ist es, die Fliege mit einer Fliegenklatsche so schnell und oft wie m�glich zu t�ten.NEWDie Steuerung der Fliegenklatsche erfolgt mit Hilfe der Maus, mit der Sie sich frei �ber das gesamte Spielfeld bewegen k�nnen. Mit der linken oder rechten Maustaste k�nnen Sie die Fliegenklatsche benutzen und sehen, wie sie zuschl�gt.NEWW�hrend des Spiels h�ren Sie das Summen der Fliege. Nach jedem Versuch, die Fliege zu treffen, bekommen Sie ein akustisches Feedback. Im Falle des Erfolgs h�ren Sie ein Jubeln beziehungsweise bei einem Fehlversuch ein Raunen.NEWDas Spiel ist in 4 Bl�cke unterteilt. Zwischen den einzelnen Bl�cken k�nnen Sie eine Pause machen. Um den n�chsten Block zu beginnen, dr�cken Sie die �Enter�-Taste. Der erste Block dient als Trainingsblock.NEW<b>Wichtige Anmerkung: Bitte achten Sie darauf, nur die Hand, mit der Sie das Spiel steuern, zu bewegen.</b>
-        <b>Herzlich Willkommen bei �Klatsch die Fliege�!</b>\nDie Aufgabe des Spiels ist es, die Fliege mit einer Fliegenklatsche so schnell und oft wie m�glich zu t�ten.\nDie Steuerung der Fliegenklatsche erfolgt mit Hilfe der Maus, mit der Sie sich frei �ber das gesamte Spielfeld bewegen k�nnen. Mit der linken oder rechten Maustaste k�nnen Sie die Fliegenklatsche benutzen und sehen, wie sie zuschl�gt.\nW�hrend des Spiels h�ren Sie das Summen der Fliege. Nach jedem Versuch, die Fliege zu treffen, bekommen Sie ein akustisches Feedback. Im Falle des Erfolgs h�ren Sie ein Jubeln beziehungsweise bei einem Fehlversuch ein Raunen.\nDas Spiel ist in 4 Bl�cke unterteilt. Zwischen den einzelnen Bl�cken k�nnen Sie eine Pause machen. Um den n�chsten Block zu beginnen, dr�cken Sie die �Enter�-Taste. Der erste Block dient als Trainingsblock.\n<b>Wichtige Anmerkung: Bitte achten Sie darauf, nur die Hand, mit der Sie das Spiel steuern, zu bewegen.</b>
-        
-        
-        <b>Block 1: Trainingsphase</b>NEWZielen Sie mit Hilfe der Fliegenklatsche auf die Fliege.NEWUm die Fliegenklatsche zu benutzen, dr�cken Sie die linke oder rechte Maustaste.
-        <b>Block 1 ist geschafft!</b>NEWDr�cken Sie �Enter�, um den <b>2. Block </b> zu starten.
-        <b>Block 2 ist geschafft!</b>NEWDr�cken Sie �Enter�, um den <b>3. Block </b> zu starten.
-        <b>Block 3 ist geschafft!</b>NEWDr�cken Sie �Enter�, um den <b>4. Block </b> zu starten.
-        <b>Block 4 ist geschafft!</b>NEWVielen Dank, dass Sie mitgespielt haben.NEWSie erhalten jetzt einen Fragebogen.NEWDr�cken Sie �Enter�, um das Programm zu schlie�en.
-    };
-        */
+        roundHits = new int[rounds.Length - 1];
+        roundMisses = new int[roundHits.Length];
+
+        if (File.Exists("rundenZeiten.txt"))
+        {
+            string[] tmpRoundTime = File.ReadAllLines("rundenZeiten.txt");
+
+            if (tmpRoundTime.Length == rounds.Length - 1)
+            {
+                for (int i = 0; i < tmpRoundTime.Length; i++)
+			    {
+			        int tryVal = -1;
+
+                    if(int.TryParse(tmpRoundTime[i], out tryVal)){
+                        rounds[i].roundTime = (float)tryVal;
+                    }
+			    }
+            }
+        }
 
     }
 
     void Start()
     {
-        //  Cursor.visible = false;
+        SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.GameStarted);
         EndRound();
+    }
+
+    void OnDestroy()
+    {
+        SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.GameEnded);
     }
 
 
@@ -86,7 +120,17 @@ public class WorldManager : MonoBehaviour {
             {
                 this.remainingRoundTime -= Time.deltaTime;
                 currentRoundTime += Time.deltaTime;
+                timeSinceLastClick += Time.deltaTime;
 
+                if ((int)timeSinceLastClick % timeWhenSoundIncrease == 0 && (int)timeSinceLastClick != lastSoundIncreaseTime)
+                {
+                    lastSoundIncreaseTime = (int)timeSinceLastClick;
+
+                    if (TheFly)
+                    {
+                        TheFly.IncreaseSoundVolume(volumeIncreaseAfterTime);
+                    }
+                }
 
                 SetRoundTimerText();
                 if (remainingRoundTime <= 0.0f)
@@ -115,34 +159,44 @@ public class WorldManager : MonoBehaviour {
 
     private void WriteResults()
     {
-        string[] contents = { "Treffer: " + hitCount, "Nicht-Treffer: " + missCount };
+        //string[] contents = { "Treffer: " + hitCount, "Nicht-Treffer: " + missCount };
+        List<string> contents = new List<string>();
+        contents.Add(string.Concat("Treffer gesamt: ", hitCount));
+        contents.Add(string.Concat("Nicht-Treffer gesamt: ", missCount));
+
+        for (int i = 0; i < roundHits.Length; i++)
+        {
+            contents.Add(string.Concat("Treffer in Runde ", (i + 1), ": ", roundHits[i]));
+            contents.Add(string.Concat("Nicht-Treffer in Runde ", (i + 1), ": ", roundMisses[i]));
+        }
 
         int count = 0;
         string name = "result0.txt";
         do
         {
-            name = string.Concat("result.txt", count);
+            name = string.Format("result{0}.txt", count);
             count++;
         } while (File.Exists(name));
 
 
-        File.WriteAllLines(name, contents);
+        File.WriteAllLines(name, contents.ToArray());
     }
 
     public void StartRound()
     {
+        SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.RoundStarted);
+
+        ResetLastClickTimer(true);
+
         roundTimerText.gameObject.SetActive(true);
         TheFlySwatter.Unhide();
-
+        
         CreateAFly();
 
         currentRoundTime = 0.0f;
         Time.timeScale = 1.0f;
         
-
         this.roundIsRunning = true;
-
-
         this.uiCanvas.SetActive(false);
     }
 
@@ -152,8 +206,8 @@ public class WorldManager : MonoBehaviour {
         int tryCount = 0;
         do
         {
-            float randX = Random.Range(min.transform.position.x, max.transform.position.x);
-            float randY = Random.Range(min.transform.position.y, max.transform.position.y);
+            float randX = UnityEngine.Random.Range(min.transform.position.x, max.transform.position.x);
+            float randY = UnityEngine.Random.Range(min.transform.position.y, max.transform.position.y);
 
             startPos = new Vector3(randX, randY, 0.0f);
             tryCount++;
@@ -161,14 +215,16 @@ public class WorldManager : MonoBehaviour {
         }
         while (Vector3.Distance(startPos, TheFlySwatter.gameObject.transform.position) < 16.0f && tryCount < 10);
 
-  
-
         GameObject newFly = (GameObject)Instantiate(this.FlyPrefab, startPos, Quaternion.identity);
         newFly.GetComponent<FlyBehavior>().Init(curRound);
     }
 
     private void EndRound()
     {
+        SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.RoundEnded);
+
+        TheFlySwatter.CancelAttackAnimation();
+
         roundTimerText.gameObject.SetActive(false);
         TheFlySwatter.Hide();
 
@@ -199,18 +255,33 @@ public class WorldManager : MonoBehaviour {
 
     public void OnMissed()
     {
+
+        SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.OnFlyMiss);
+
+        ResetLastClickTimer(false);
+
+        if (TheFly)
+            TheFly.IncreaseSoundVolume(volumeIncreaseOnMiss);
+
         disappointedCrowdSound.Play();
 
-
+        roundMisses[curRound]++;
         missCount++;
+
     }
 
     public void OnHit(bool firstHit)
     {
+        ResetLastClickTimer(true);
+
         if (firstHit)
         {          
             happyKidsSound.Play();
             hitCount++;
+
+            SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.OnFlyKill);
+
+            roundHits[curRound]++;
         }
 
         else
@@ -219,6 +290,20 @@ public class WorldManager : MonoBehaviour {
         }
     }
 
+    private void ResetLastClickTimer(bool resetVolume)
+    {
+        timeSinceLastClick = 0.0f;
+        lastSoundIncreaseTime = 0;
 
-    
+        if (TheFly && resetVolume)
+            TheFly.ResetSoundVolume();
+    }
+
+    public void OnSwatterAttackStarted()
+    {
+        if (TheFly)
+            TheFly.OnSwatterAttackStarted();
+
+        roundIdWhenSwatterAttackStarted = curRound;
+    }
 }

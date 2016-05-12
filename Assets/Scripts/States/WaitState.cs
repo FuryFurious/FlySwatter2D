@@ -21,7 +21,7 @@ public class WaitState : AFlyState
         switch (difficulty)
         {
             case 0:
-                chanceToFleeOnAttack = 0.15f;
+                chanceToFleeOnAttack = 0.25f;
                 break;
 
             case 1:
@@ -29,11 +29,11 @@ public class WaitState : AFlyState
                 break;
 
             case 2:
-                chanceToFleeOnAttack = 0.75f;
+                chanceToFleeOnAttack = 0.25f;
                 break;
 
             case 3:
-                chanceToFleeOnAttack = 0.95f;
+                chanceToFleeOnAttack = 1.0f;
                 break;
 
             default:

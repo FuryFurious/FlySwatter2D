@@ -1,0 +1,10 @@
+Treffer gesamt: 1
+Nicht-Treffer gesamt: 6
+Treffer in Runde 1: 0
+Nicht-Treffer in Runde 1: 0
+Treffer in Runde 2: 0
+Nicht-Treffer in Runde 2: 1
+Treffer in Runde 3: 1
+Nicht-Treffer in Runde 3: 2
+Treffer in Runde 4: 0
+Nicht-Treffer in Runde 4: 3

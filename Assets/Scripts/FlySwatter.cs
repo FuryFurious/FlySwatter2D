@@ -22,11 +22,14 @@ public class FlySwatter : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-            Attack();
+        if (WorldManager.Instance.RoundIsRunning)
+        {
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+                Attack();
 
-        if(!isAttacking)
-            UpdatePosition();
+            if (!isAttacking)
+                UpdatePosition();
+        }
 	}
 
     private void UpdatePosition()
@@ -44,8 +47,7 @@ public class FlySwatter : MonoBehaviour {
             isAttacking = true;
             myAnimator.SetBool("IsAttacking", isAttacking);
 
-            if (WorldManager.Instance.TheFly)
-                WorldManager.Instance.TheFly.OnSwatterAttackStarted();
+            WorldManager.Instance.OnSwatterAttackStarted();
 
             whipSound.Play();
         }
@@ -55,13 +57,10 @@ public class FlySwatter : MonoBehaviour {
     {
         myCollider.enabled = true;
 
-     
     }
 
     public void AttackExit()
     {
-        myCollider.enabled = false;
-
         if (WorldManager.Instance.TheFly)
         {
             WorldManager.Instance.TheFly.OnSwatterAttackEnded();
@@ -77,9 +76,15 @@ public class FlySwatter : MonoBehaviour {
         firstHit = false;
     }
 
+    public void CancelAttackAnimation()
+    {
+        OnAttackAnimationEnd();
+    }
+
     public void OnAttackAnimationEnd()
     {
         isAttacking = false;
+        myCollider.enabled = false;
         myAnimator.SetBool("IsAttacking", isAttacking);
     }
 
@@ -92,8 +97,6 @@ public class FlySwatter : MonoBehaviour {
         {
             hitFly = true;
             firstHit = fly.Die();
-
-            //Physics2D.IgnoreCollision(myCollider, other);
         }
     }
 
