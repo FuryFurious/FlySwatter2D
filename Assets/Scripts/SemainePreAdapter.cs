@@ -51,6 +51,8 @@ public static class SemainePreAdapter
     public static void SendSemaineEvent(SemaineEvent sEvent)
     {
         SendKeyCombination(combinations[(int)sEvent].strokes);
+
+        //Debug.Log("Semaine: " + sEvent.ToString());
     }
 
 

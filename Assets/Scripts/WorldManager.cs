@@ -1,10 +1,7 @@
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using System;
 
 public class WorldManager : MonoBehaviour {
 
@@ -25,8 +22,6 @@ public class WorldManager : MonoBehaviour {
     [SerializeField]
     private RoundInfo[] rounds;
 
-    /// <summary>Indicates in which round the swatter started to attack. </summary>
-    private int roundIdWhenSwatterAttackStarted = -1;
     private int curRound = -1;
     private float currentRoundTime;
     private float remainingRoundTime;
@@ -48,6 +43,12 @@ public class WorldManager : MonoBehaviour {
 
     private int[] roundHits;
     private int[] roundMisses;
+
+
+    public int GetCurRound()
+    {
+        return curRound;
+    }
 
     [SerializeField]
     private float timeSinceLastClick;
@@ -223,8 +224,6 @@ public class WorldManager : MonoBehaviour {
     {
         SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.RoundEnded);
 
-        TheFlySwatter.CancelAttackAnimation();
-
         roundTimerText.gameObject.SetActive(false);
         TheFlySwatter.Hide();
 
@@ -304,6 +303,5 @@ public class WorldManager : MonoBehaviour {
         if (TheFly)
             TheFly.OnSwatterAttackStarted();
 
-        roundIdWhenSwatterAttackStarted = curRound;
     }
 }

@@ -27,6 +27,8 @@ public class FlyBehavior : MonoBehaviour {
     public bool isMoving;
     public bool IsMoving { get { return isMoving; } set { SetIsMoving(value); } }
 
+    public int Difficulty { get { return difficulty; } }
+
     private AFlyState[] flyStates;
 
     [SerializeField]
@@ -43,6 +45,8 @@ public class FlyBehavior : MonoBehaviour {
     private float startVolume = 0.25f;
     [SerializeField]
     private float maxVolume = 0.75f;
+
+    private int difficulty;
 
     void Start () 
     {
@@ -61,6 +65,8 @@ public class FlyBehavior : MonoBehaviour {
 
     public void Init(int curRound)
     {
+        difficulty = curRound;
+
         flyStates = new AFlyState[(int)EFlyState.Count];
         
         flyStates[(int)EFlyState.Wait] = new WaitState(curRound, WorldManager.Instance.TheFlySwatter, this);
