@@ -40,6 +40,7 @@ public class FlySwatter : MonoBehaviour {
             if (!IsAttacking)
                 UpdatePosition();
         }
+      
 	}
 
     private void UpdatePosition()
@@ -116,5 +117,6 @@ public class FlySwatter : MonoBehaviour {
     {
         bottomObject.SetActive(true);
     }
+
     
 }
