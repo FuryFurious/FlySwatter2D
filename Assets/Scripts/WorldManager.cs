@@ -15,6 +15,11 @@ public class WorldManager : MonoBehaviour {
     public Text continueText;
     public Text roundTimerText;
 
+    public GameObject inGameCanvas;
+
+    public Text roundHitsText;
+    public Text roundsMissText;
+
     /// <summary>Minimum transform of the level (minimum boundary in which the fly should fly)</summary>
     public Transform min;
     public Transform max;
@@ -188,8 +193,7 @@ public class WorldManager : MonoBehaviour {
         SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.RoundStarted);
 
         ResetLastClickTimer(true);
-
-        roundTimerText.gameObject.SetActive(true);
+        inGameCanvas.SetActive(true);
         TheFlySwatter.Unhide();
         
         CreateAFly();
@@ -224,7 +228,8 @@ public class WorldManager : MonoBehaviour {
     {
         SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.RoundEnded);
 
-        roundTimerText.gameObject.SetActive(false);
+        inGameCanvas.SetActive(false);
+        //roundTimerText.gameObject.SetActive(false);
         TheFlySwatter.Hide();
 
         if (this.TheFly)
@@ -233,6 +238,9 @@ public class WorldManager : MonoBehaviour {
         }
 
         this.curRound++;
+
+
+
         Time.timeScale = 0.0f;
         roundIsRunning = false;
         this.uiCanvas.SetActive(true);
@@ -241,6 +249,12 @@ public class WorldManager : MonoBehaviour {
         {
             showEndScreen = true;
             continueText.text = endText;
+        }
+
+        else
+        {
+            roundsMissText.text = "Nicht-Treffer: " + roundMisses[curRound];
+            roundHitsText.text = "Treffer: " + roundHits[curRound];
         }
 
         string tmpText = rounds[this.curRound].text.Replace("NEW", "\n");
@@ -265,6 +279,9 @@ public class WorldManager : MonoBehaviour {
         disappointedCrowdSound.Play();
 
         roundMisses[curRound]++;
+
+        roundsMissText.text = "Nicht-Treffer: " + roundMisses[curRound];
+       
         missCount++;
 
     }
@@ -281,6 +298,8 @@ public class WorldManager : MonoBehaviour {
             SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.OnFlyKill);
 
             roundHits[curRound]++;
+
+            roundHitsText.text = "Treffer: " + roundHits[curRound];
         }
 
         else
