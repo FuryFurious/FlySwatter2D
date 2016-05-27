@@ -25,7 +25,7 @@ public class WaitState : AFlyState
                 break;
 
             case 1:
-                chanceToFleeOnAttack = 0.5f;
+                chanceToFleeOnAttack = 0.6f;
                 break;
 
             case 2:
