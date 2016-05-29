@@ -80,7 +80,6 @@ public class WaitState : AFlyState
         {
             if ((swatter.gameObject.transform.position - fly.gameObject.transform.position).sqrMagnitude < flySwatterAggroRadius * flySwatterAggroRadius)
             {
-
                 if (Random.value <= chanceToFleeOnAttack)
                     fly.SetState(FlyBehavior.EFlyState.Move);
             }

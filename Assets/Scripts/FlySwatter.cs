@@ -24,6 +24,8 @@ public class FlySwatter : MonoBehaviour {
 
     public AudioSource whipSound;
 
+    bool canCollide = false;
+
 	// Use this for initialization
 	void Start () {
         //WorldManager.Instance.TheFlySwatter = this;
@@ -70,14 +72,13 @@ public class FlySwatter : MonoBehaviour {
 
     public void AttackEnter()
     {
-        Debug.Log("enter");
-        myCollider.enabled = true;
+        //myCollider.enabled = true;
+
+        canCollide = true;
     }
 
     public void AttackExit()
     {
-        Debug.Log("exit");
-
         if (roundWhenStartedAttack == WorldManager.Instance.GetCurRound())
         {
             if (hitFly)
@@ -94,17 +95,24 @@ public class FlySwatter : MonoBehaviour {
 
         IsAttacking = false;
 
-        myCollider.enabled = false;
+        canCollide = false;
+        //myCollider.enabled = false;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
-        FlyBehavior fly  = other.GetComponent<FlyBehavior>();
+        FlyBehavior fly = other.GetComponent<FlyBehavior>();
 
-        if (fly && fly.Difficulty != 3)
+        if (fly)
         {
-            hitFly = true;
-            firstHit = fly.Die();
+            if (fly.Difficulty == 3)
+                return;
+
+            else if(canCollide)
+            {
+                hitFly = true;
+                firstHit = fly.Die();
+            }
         }
     }
 
