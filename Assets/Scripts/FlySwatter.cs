@@ -70,32 +70,32 @@ public class FlySwatter : MonoBehaviour {
 
     public void AttackEnter()
     {
+        Debug.Log("enter");
         myCollider.enabled = true;
     }
 
     public void AttackExit()
     {
+        Debug.Log("exit");
+
         if (roundWhenStartedAttack == WorldManager.Instance.GetCurRound())
         {
-            if (WorldManager.Instance.TheFly)
-            {
-                WorldManager.Instance.TheFly.OnSwatterAttackEnded();
-            }
-
             if (hitFly)
                 WorldManager.Instance.OnHit(firstHit);
 
             else
                 WorldManager.Instance.OnMissed();
+        }
 
+        if (WorldManager.Instance.TheFly)
+        {
+            WorldManager.Instance.TheFly.OnSwatterAttackEnded();
         }
 
         IsAttacking = false;
 
         myCollider.enabled = false;
     }
-
-
 
     void OnTriggerEnter2D(Collider2D other)
     {

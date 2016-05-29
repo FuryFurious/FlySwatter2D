@@ -239,8 +239,6 @@ public class WorldManager : MonoBehaviour {
 
         this.curRound++;
 
-
-
         Time.timeScale = 0.0f;
         roundIsRunning = false;
         this.uiCanvas.SetActive(true);
@@ -268,7 +266,6 @@ public class WorldManager : MonoBehaviour {
 
     public void OnMissed()
     {
-
         SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.OnFlyMiss);
 
         ResetLastClickTimer(false);
@@ -283,7 +280,6 @@ public class WorldManager : MonoBehaviour {
         roundsMissText.text = "Nicht-Treffer: " + roundMisses[curRound];
        
         missCount++;
-
     }
 
     public void OnHit(bool firstHit)
@@ -321,6 +317,5 @@ public class WorldManager : MonoBehaviour {
     {
         if (TheFly)
             TheFly.OnSwatterAttackStarted();
-
     }
 }

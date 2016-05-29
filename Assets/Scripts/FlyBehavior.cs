@@ -48,6 +48,8 @@ public class FlyBehavior : MonoBehaviour {
 
     private int difficulty;
 
+    public BoxCollider2D myCollider;
+
     void Start () 
     {
 
@@ -142,7 +144,6 @@ public class FlyBehavior : MonoBehaviour {
         }
     }
 
-
     public void OnSwatterAttackStarted()
     {
         for (int i = 0; i < flyStates.Length; i++)
@@ -186,6 +187,8 @@ public class FlyBehavior : MonoBehaviour {
 
         if (!isDead)
         {
+
+            myCollider.enabled = false;
             isDead = true;
             myAnimator.SetBool("IsDead", true);
 
