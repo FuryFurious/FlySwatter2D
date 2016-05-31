@@ -10,10 +10,14 @@ public class WorldManager : MonoBehaviour {
     public GameObject FlyPrefab;
 
     public string endText;
-    public GameObject uiCanvas;
+    public GameObject pauseCanvas;
+    public GameObject inGameCanvas;
     public Text roundText;
     public Text continueText;
     public Text roundTimerText;
+
+    public Text roundHitsText;
+    public Text roundMissesText;
 
     /// <summary>Minimum transform of the level (minimum boundary in which the fly should fly)</summary>
     public Transform min;
@@ -44,6 +48,8 @@ public class WorldManager : MonoBehaviour {
     private int[] roundHits;
     private int[] roundMisses;
 
+    private bool wroteResults;
+
 
     public int GetCurRound()
     {
@@ -70,6 +76,7 @@ public class WorldManager : MonoBehaviour {
         roundHits = new int[rounds.Length - 1];
         roundMisses = new int[roundHits.Length];
 
+#if !UNITY_EDITOR
         if (File.Exists("rundenZeiten.txt"))
         {
             string[] tmpRoundTime = File.ReadAllLines("rundenZeiten.txt");
@@ -86,7 +93,18 @@ public class WorldManager : MonoBehaviour {
 			    }
             }
         }
+#endif
 
+    }
+
+    void SetRoundHitsText()
+    {
+        roundHitsText.text = "Treffer: " + roundHits[curRound];
+    }
+
+    void SetRoundMissesText()
+    {
+        roundMissesText.text = "Nicht-Treffer: " + roundMisses[curRound];
     }
 
     void Start()
@@ -149,9 +167,14 @@ public class WorldManager : MonoBehaviour {
 
         else
         {
-            if (Input.GetKeyDown(KeyCode.Return))
+            if(!wroteResults)
             {
                 WriteResults();
+                wroteResults = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
                 Application.Quit();
             }
         }
@@ -187,9 +210,13 @@ public class WorldManager : MonoBehaviour {
     {
         SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.RoundStarted);
 
+        SetRoundHitsText();
+        SetRoundMissesText();
+
         ResetLastClickTimer(true);
 
-        roundTimerText.gameObject.SetActive(true);
+        //roundTimerText.gameObject.SetActive(true);
+        inGameCanvas.gameObject.SetActive(true);
         TheFlySwatter.Unhide();
         
         CreateAFly();
@@ -198,7 +225,7 @@ public class WorldManager : MonoBehaviour {
         Time.timeScale = 1.0f;
         
         this.roundIsRunning = true;
-        this.uiCanvas.SetActive(false);
+        this.pauseCanvas.SetActive(false);
     }
 
     public void CreateAFly()
@@ -224,7 +251,9 @@ public class WorldManager : MonoBehaviour {
     {
         SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.RoundEnded);
 
-        roundTimerText.gameObject.SetActive(false);
+
+        inGameCanvas.gameObject.SetActive(false);
+
         TheFlySwatter.Hide();
 
         if (this.TheFly)
@@ -235,7 +264,7 @@ public class WorldManager : MonoBehaviour {
         this.curRound++;
         Time.timeScale = 0.0f;
         roundIsRunning = false;
-        this.uiCanvas.SetActive(true);
+        this.pauseCanvas.SetActive(true);
 
         if (curRound == rounds.Length - 1)
         {
@@ -254,7 +283,6 @@ public class WorldManager : MonoBehaviour {
 
     public void OnMissed()
     {
-
         SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.OnFlyMiss);
 
         ResetLastClickTimer(false);
@@ -265,6 +293,7 @@ public class WorldManager : MonoBehaviour {
         disappointedCrowdSound.Play();
 
         roundMisses[curRound]++;
+        SetRoundMissesText();
         missCount++;
 
     }
@@ -281,6 +310,8 @@ public class WorldManager : MonoBehaviour {
             SemainePreAdapter.SendSemaineEvent(SemainePreAdapter.SemaineEvent.OnFlyKill);
 
             roundHits[curRound]++;
+
+            SetRoundHitsText();
         }
 
         else

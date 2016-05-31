@@ -29,8 +29,6 @@ public static class SemainePreAdapter
         CreateCombination(SemaineEvent.RoundEnded,      NativeMethods.KEY_L_CONTROL, NativeMethods.KEY_F2);
         CreateCombination(SemaineEvent.OnFlyKill,       NativeMethods.KEY_L_CONTROL, NativeMethods.KEY_F3);
         CreateCombination(SemaineEvent.OnFlyMiss,       NativeMethods.KEY_L_CONTROL, NativeMethods.KEY_F4);
-
-
     }
 
     private static void CreateCombination(SemaineEvent sEvent, params byte[] keystrokes)
@@ -50,9 +48,9 @@ public static class SemainePreAdapter
 
     public static void SendSemaineEvent(SemaineEvent sEvent)
     {
+#if !UNITY_EDITOR
         SendKeyCombination(combinations[(int)sEvent].strokes);
-
-        //Debug.Log("Semaine: " + sEvent.ToString());
+#endif
     }
 
 
