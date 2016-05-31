@@ -156,6 +156,17 @@ public class WorldManager : MonoBehaviour {
                 {
                     EndRound();
                 }
+
+
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    if (TheFly)
+                    {
+                        TheFly.Remove();
+                    }
+
+                    CreateAFly();
+                }
             }
 
             else

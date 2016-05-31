@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Properties>
+  <!--Property Name="NMS.Url" Value="activemq:tcp://192.168.52.34:61616"/-->
+  <Property Name="NMS.Url" Value="activemq:tcp://localhost:61616"/>
+  <Property Name="Semaine.Components" Value=""/>
+  <Property Name="Semaine.Systemmanager.GUI" Value="false"/>
+  <Property Name="Semaine.Use.Embedded.Broker" Value="false"/>
+  
+</Properties>
+
+<!--"activemq:tcp://localhost:61616"-->
+
+<!--<Property Name="Semaine.Components" Value="|InputFusion:InputFusion.InputFusionComponent|InputFusion:InputFusion.ApplicationDebugComponent|"/>-->

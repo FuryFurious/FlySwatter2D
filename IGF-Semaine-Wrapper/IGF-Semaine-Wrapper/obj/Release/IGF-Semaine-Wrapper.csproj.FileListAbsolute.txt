@@ -1,0 +1,8 @@
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Release\IGF-Semaine-Wrapper.exe.config
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Release\MainWindow.baml
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Release\MainWindow.g.cs
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Release\App.g.cs
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Release\IGF-Semaine-Wrapper_MarkupCompile.cache
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Release\IGF-Semaine-Wrapper.g.resources
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Release\IGF_Semaine_Wrapper.Properties.Resources.resources
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Release\IGF-Semaine-Wrapper.csproj.GenerateResource.Cache

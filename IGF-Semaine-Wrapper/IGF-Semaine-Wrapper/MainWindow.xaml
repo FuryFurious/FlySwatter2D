@@ -1,0 +1,11 @@
+﻿<Window x:Class="IGF_Semaine_Wrapper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="IGF-Semain-Wrapper" Height="350" Width="760" MinHeight="350" MaxHeight="350" MinWidth="760" MaxWidth="760" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <ScrollViewer HorizontalAlignment="Left" Height="283" Margin="10,26,0,0"  VerticalAlignment="Top" Width="732" ScrollChanged="ScrollViewer_ScrollChanged">
+            <StackPanel x:Name="sP_debug" Height="auto" Width="702" />
+        </ScrollViewer>
+        <Label Content="Debug Ausgabe:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

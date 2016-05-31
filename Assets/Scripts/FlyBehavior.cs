@@ -180,6 +180,11 @@ public class FlyBehavior : MonoBehaviour {
 
     }
 
+    public void Remove()
+    {
+        GameObject.Destroy(gameObject);     
+    }
+
     public bool Die()
     {
         SpawnBlood();

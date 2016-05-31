@@ -1,0 +1,52 @@
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.exe.config
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.exe
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.pdb
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Apache.NMS.ActiveMQ.dll
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Apache.NMS.dll
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\log4net.dll
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\SemaineApi.dll
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.csprojResolveAssemblyReference.cache
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\MainWindow.baml
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\MainWindow.g.cs
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\App.g.cs
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper_MarkupCompile.cache
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.g.resources
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF_Semaine_Wrapper.Properties.Resources.resources
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.csproj.GenerateResource.Cache
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.exe
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.pdb
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Konfiguration\konfiguration.xml
+c:\users\geek6_000\documents\visual studio 2013\Projects\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Konfiguration\sfb.config.xml
+C:\Users\geek6_000\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.exe.config
+C:\Users\geek6_000\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.exe
+C:\Users\geek6_000\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.pdb
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.exe.config
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.exe
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.pdb
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Konfiguration\konfiguration.xml
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Konfiguration\sfb.config.xml
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.exe
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.pdb
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.csprojResolveAssemblyReference.cache
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\MainWindow.baml
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\MainWindow.g.cs
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\App.g.cs
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper_MarkupCompile.cache
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.g.resources
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF_Semaine_Wrapper.Properties.Resources.resources
+C:\Users\Kai\Desktop\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.csproj.GenerateResource.Cache
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.exe.config
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.exe
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.pdb
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Konfiguration\konfiguration.xml
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\Konfiguration\sfb.config.xml
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.exe
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\bin\Debug\IGF-Semaine-Wrapper.pdb
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.csprojResolveAssemblyReference.cache
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\MainWindow.baml
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\MainWindow.g.cs
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\App.g.cs
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper_MarkupCompile.cache
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.g.resources
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF_Semaine_Wrapper.Properties.Resources.resources
+C:\Users\Kai\Desktop\Semaine-WrapperFliegenklatsche\IGF-Semaine-Wrapper\IGF-Semaine-Wrapper\obj\Debug\IGF-Semaine-Wrapper.csproj.GenerateResource.Cache
